@@ -21,21 +21,27 @@ import tables
 
 def for_table(query, name):
     pos = []
-    query = query.replace(',' , '')
     query = query.split()
     for i in range(len(query)):
         for letter in query[i]:
             if letter in number_list:
-                pos.append(int(i))      
+                pos.append(int(i))  
+
+    ext = ['st', 'nd', 'rd', 'th', ',']
     pos = set(pos)
+    table = []
     times = 10
+
     for i in pos:
         if query[i-1] == 'upto':
             times = int(query[i])
-        elif len(query)-1 > i:  
-            if query[i+1] == "table" or query[i-2] == "table":
-                table = int(query[i])
-        else:
-            print("invalid")
+        
+        elif len(query)-1 > i:
+            if query[i+1] == "and" or query[i-1] == "and":
+                table = [int(query[i]) for i in pos]
+        
+        for ex in ext:
+            if ex in query[i]: 
+                table.append(int(query[i].replace(f'{ex}', '')))
         
     tables.table(table, times, name)
